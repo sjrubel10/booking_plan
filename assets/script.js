@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const $seatGrid = $('#seat-grid');
-    const rows = 10, cols = 5, boxSize = 30;
+    const rows = 15, cols = 21, boxSize = 35;
 
     // Generate the seat grid
     for (let row = 0; row < rows; row++) {
@@ -14,8 +14,8 @@ $(document).ready(function () {
                       style="
                       left: ${col * boxSize}px; 
                       top: ${row * boxSize}px;
-                      width: ${boxSize}px;
-                      height: ${boxSize}px;
+                      width: ${boxSize - 5}px;
+                      height: ${boxSize -2}px;
                       ">
                 </div>`
             );
@@ -134,12 +134,13 @@ $(document).ready(function () {
                 const id = $(this).data('id');
                 const row = $(this).data('row');
                 const col = $(this).data('col');
+                const seat_number = $(this).data('seat-num');
                 const color = $(this).css('background-color');
                 const price = $(this).data('price') || 0;
                 const width =$(this).css('width') || 0;
                 const height = $(this).css('height') || 0;
 
-                selectedSeats.push({ id, row, col, color, price, width, height });
+                selectedSeats.push({ id, row, col, color, price, width, height, seat_number });
             }
         });
 

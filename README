@@ -1,0 +1,8 @@
+First Create database Name: seat_plan
+Second create table using sql: CREATE TABLE `seat_plan_names` (
+                                 `id` int NOT NULL AUTO_INCREMENT,
+                                 `plan_name` varchar(255) NOT NULL,
+                                 `plan_details` longtext NOT NULL,
+                                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                 PRIMARY KEY (`id`)
+                               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

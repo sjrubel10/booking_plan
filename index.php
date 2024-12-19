@@ -18,7 +18,7 @@
     <input type="color" id="color" value="#ff0000">
     <input type="number" class="set_price" id="price" placeholder="Price">
     <button id="apply-tool">Apply</button>
-    <button class="make_circle" id="make_circle">Circle</button>
+<!--    <button class="make_circle" id="make_circle">Circle</button>-->
     <input type="text" id="seat_number" placeholder="A-1">
     <button class="set_seat_number" id="set_seat_number">Set Seat Number</button>
     <button class="drag_drop" id="enable_drag_drop">Drag & Drop</button>

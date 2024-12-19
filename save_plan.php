@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 
     // Save seat details
-    $stmt = $conn->prepare("INSERT INTO seat_plan_details (plan_id, seat_id, color, price, width, height) VALUES (?, ?, ?, ?, ?, ?)");
+    /*$stmt = $conn->prepare("INSERT INTO seat_plan_details (plan_id, seat_id, color, price, width, height) VALUES (?, ?, ?, ?, ?, ?)");
     foreach ($selectedSeats as $seat) {
         $seatId = $seat['id'];
         $color = $seat['color'];
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
     }
     $stmt->close();
-    $conn->close();
+    $conn->close();*/
 
     echo 'Plan saved successfully!';
 }

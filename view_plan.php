@@ -63,8 +63,8 @@ $conn->close();
 $width = 36 ;
 $height=36;
 
-$child_width = $width - 6;
-$child_height = $height - 6;
+/*$child_width = $width - 6;
+$child_height = $height - 6;*/
 $box_size = 35;
 ?>
 <style>
@@ -102,7 +102,7 @@ $box_size = 35;
         $width = isset( $seat['width'] ) ? (int)$seat['width'] : 0;
         $height = isset( $seat['height'] ) ? (int)$seat['height'] : 0;
 
-        $child_width = $width - 8;
+        $child_width = $width - 6;
         $child_height = $height - 4;
         if ( preg_match('/^(\d+)-(\d+)$/', $seat['id'], $matches ) ) {
             $row = intval($matches[1]);
