@@ -22,7 +22,7 @@
     <input type="text" id="seat_number" placeholder="A-1">
     <button class="set_seat_number" id="set_seat_number">Set Seat Number</button>
     <button class="drag_drop" id="enable_drag_drop">Drag & Drop</button>
-<!--    <button class="make_circle" id="make_rectangle">Rectangle</button>-->
+    <button class="make_circle" id="enable_resize">Resize</button>
     <button id="save-plan">Save Plan</button>
 </div>
 <div id="seat-grid" class="seat-grid"></div>

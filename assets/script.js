@@ -14,7 +14,7 @@ $(document).ready(function () {
                       style="
                       left: ${col * boxSize}px; 
                       top: ${row * boxSize}px;
-                      width: ${boxSize - 5}px;
+                      width: ${boxSize - 3}px;
                       height: ${boxSize -2}px;
                       ">
                 </div>`
@@ -103,9 +103,15 @@ $(document).ready(function () {
     $(document).on('click', '#make_circle', function () {
         $(this).toggleClass('circleSelected');
     });
+
     $(document).on('click', '#set_seat_number', function () {
         $(this).toggleClass('setSeatNumberSelected');
     });
+
+    $(document).on('click', '#enable_resize', function () {
+        $(this).toggleClass('enable_resize_selected');
+    });
+
     $(document).on('click', '#enable_drag_drop', function () {
         $(this).toggleClass('enable_drag_drop');
     });
@@ -270,37 +276,39 @@ $(document).ready(function () {
     });
 
     $seatGrid.on('click', '.box.selected', function () {
-        $(this).resizable({
-            minHeight: 10,
-            minWidth: 10,
-            maxHeight: 1000,
-            maxWidth: 800,
-            handles: 'all',
-            start: function (event, ui) {
-                isResizing = true;
+        if( $('#enable_resize').hasClass('enable_resize_selected')) {
+            $(this).resizable({
+                minHeight: 10,
+                minWidth: 10,
+                maxHeight: 1000,
+                maxWidth: 800,
+                handles: 'all',
+                start: function (event, ui) {
+                    isResizing = true;
 
-                let maxZIndex = 0;
-                $('.box').each(function () {
-                    const currentZIndex = parseInt($(this).css('z-index')) || 0;
-                    if (currentZIndex > maxZIndex) {
-                        maxZIndex = currentZIndex;
-                    }
-                });
+                    let maxZIndex = 0;
+                    $('.box').each(function () {
+                        const currentZIndex = parseInt($(this).css('z-index')) || 0;
+                        if (currentZIndex > maxZIndex) {
+                            maxZIndex = currentZIndex;
+                        }
+                    });
 
-                const newZIndex = maxZIndex + 10;
-                $(this).css('z-index', newZIndex); // Apply the new z-index
-            },
-            resize: function (event, ui) {
-                const width = ui.size.width;
-                const height = ui.size.height;
-                $(this).data('width', width).data('height', height);
-            },
-            stop: function (event, ui) {
-                isResizing = false; // Reset flag when resizing stops
-                $(this).removeClass('ui-resizable ui-resizable-handle ui-resizable-all');
-                console.log('Resize complete:', ui.size.width, ui.size.height);
-            }
-        });
+                    const newZIndex = maxZIndex + 10;
+                    $(this).css('z-index', newZIndex); // Apply the new z-index
+                },
+                resize: function (event, ui) {
+                    const width = ui.size.width;
+                    const height = ui.size.height;
+                    $(this).data('width', width).data('height', height);
+                },
+                stop: function (event, ui) {
+                    isResizing = false; // Reset flag when resizing stops
+                    $(this).removeClass('ui-resizable ui-resizable-handle ui-resizable-all');
+                    console.log('Resize complete:', ui.size.width, ui.size.height);
+                }
+            });
+        }
     });
 
 

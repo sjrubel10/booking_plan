@@ -48,6 +48,9 @@ body {
 .enable_drag_drop{
     background-color: #cf933d;
 }
+.enable_resize_selected{
+    background-color: #cf933d;
+}
 .triangle {
     width: 0;
     height: 0;
