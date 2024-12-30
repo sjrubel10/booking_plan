@@ -1,71 +1,43 @@
+<?php
+require 'functions.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Plan</title>
-    <?php
-
-
-    ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <?php
 $planId = $_GET['plan_id'];
-
-
-$conn = new mysqli('localhost', 'root', '', 'seat_plan');
-if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
-}
-
-$sql = "SELECT * FROM seat_plan_names WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $planId);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$seats = [];
-$plan_details = [];
-while ($row = $result->fetch_assoc()) {
-    // Populate the seats array
-    $plan_details = array(
-        'plan_name' => $row['plan_name'],
-        'plan_details' => unserialize($row['plan_details']), // Unserialize here
-    );
-}
-
-
-
-/*$sql = "SELECT * FROM seat_plan_details WHERE plan_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $planId);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$seats = [];
-while ($row = $result->fetch_assoc()) {
-    $seats[] = $row;
-}*/
-
+$plan_details = view_plan_data( $planId );
 $seats = $plan_details['plan_details'];
-
-//$seats = $plan_details['plan_details'];
-/*echo "<pre>".$planId;
-var_dump($seats);*/
-echo count( $seats );
-
-$stmt->close();
-$conn->close();
-
 $width = 36 ;
 $height=36;
 
-/*$child_width = $width - 6;
-$child_height = $height - 6;*/
-$box_size = 35;
+/*echo "<pre>";
+var_dump($seats);*/
+
+$leastLeft = PHP_INT_MAX;
+$leastTop = PHP_INT_MAX;
+foreach ($seats as $item) {
+
+    if( isset( $item["left"] )) {
+
+        $currentLeft = (int)rtrim($item["left"], "px");
+        $currentTop = (int)rtrim($item["top"], "px");
+
+        if ($currentLeft < $leastLeft) {
+            $leastLeft = $currentLeft;
+        }
+        if ($currentTop < $leastTop) {
+            $leastTop = $currentTop;
+        }
+    }
+}
 ?>
 <style>
     #seat-grid {
@@ -86,45 +58,38 @@ $box_size = 35;
     .boxChild{
         border-radius: 3px;
         margin: 3px 3px 3px 3px;
+        font-size: 12px;
     }
     .box_selected{
         background-color: #333333;
     }
 </style>
 <h1><?php echo $plan_details['plan_name']?></h1>
+<div class="edit_plan" id="<?php echo $plan_details['plan_id']?>"><a href="editplan.php?plan_id=<?php echo $plan_details['plan_id']?>">Edit</a></div>
 <div id="seat-grid">
-<!--    <div class="boxHolder">-->
+    <div class="boxHolder">
     <?php
     $start = 1;
     $start_col = 0;
     $start_row = 0;
     foreach ($seats as $seat):
+    if( isset( $seat["left"] )) {
         $width = isset( $seat['width'] ) ? (int)$seat['width'] : 0;
         $height = isset( $seat['height'] ) ? (int)$seat['height'] : 0;
 
-        $child_width = $width - 6;
-        $child_height = $height - 4;
-        if ( preg_match('/^(\d+)-(\d+)$/', $seat['id'], $matches ) ) {
-            $row = intval($matches[1]);
-            $col = intval($matches[2]);
-
-            if( $start === 1 ){
-                $start_row = $row;
-                $start_col = $col;
-            }
-
-            $col = $col - $start_col;
-            $row = $row - $start_row;
+        $child_width = $width;
+        $child_height = $height;
             $uniqueId = "seat-{$seat['id']}"; // Unique ID for each seat
             ?>
             <div class="box"
                  id="<?= $uniqueId ?>"
                  data-price="<?= htmlspecialchars($seat['price']) ?>"
+                 data-seat-num="<?= 1 ?>"
                  style="
                      width: <?php echo $width?>px;
                      height: <?php echo $height?>px;
-                     left: <?= $col * $box_size ?>px;
-                     top: <?= $row * $box_size ?>px;"
+                     left: <?php echo (int)$seat['left'] - $leastLeft?>px;
+                     top: <?php echo  (int)$seat['top'] - $leastTop ?>px;"
                  title="Price: $<?= htmlspecialchars($seat['price']) ?>">
                 <div class="boxChild"
                      style="
@@ -133,12 +98,16 @@ $box_size = 35;
                              height: <?php echo $child_height?>px;
                              ">
 
-                </div>
+               <?php echo isset( $seat['seat_number'] ) ? $seat['seat_number'] : ''?> </div>
             </div>
-        <?php } ?>
-    <?php $start++; endforeach; ?>
+<!--        --><?php //} ?>
+    <?php $start++;
+    }
+    endforeach;
+
+    ?>
     </div>
-<!--</div>-->
+</div>
 
 <div id="seat-info" style="margin-top: 20px; font-size: 16px;">
     <strong>Seat Info:</strong> <span id="info"></span>
@@ -164,7 +133,7 @@ $box_size = 35;
             if (leastLeftValue < 0) {
                 leastLeftValue = Math.abs(leastLeftValue);
                 $("#seat-grid").css({
-                    "position": "absolute",
+                    "position": "relative",
                     "margin-left": leastLeftValue + "px"
                 });
             }

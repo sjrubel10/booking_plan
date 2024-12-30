@@ -16,19 +16,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $planId = $stmt->insert_id;
     $stmt->close();
 
-    // Save seat details
-    /*$stmt = $conn->prepare("INSERT INTO seat_plan_details (plan_id, seat_id, color, price, width, height) VALUES (?, ?, ?, ?, ?, ?)");
-    foreach ($selectedSeats as $seat) {
-        $seatId = $seat['id'];
-        $color = $seat['color'];
-        $price = $seat['price'];
-        $width = $seat['width'];
-        $height = $seat['height'];
-        $stmt->bind_param('issdss', $planId, $seatId, $color, $price, $width, $height);
-        $stmt->execute();
-    }
-    $stmt->close();
-    $conn->close();*/
-
     echo 'Plan saved successfully!';
 }

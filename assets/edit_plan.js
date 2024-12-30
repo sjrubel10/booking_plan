@@ -1,45 +1,13 @@
 $(document).ready(function () {
-    const $seatGrid = $('#seat-grid');
-    const rows = 10, cols = 12, boxSize = 45;
+    const $seatGrid = $('#edit-seat-grid');
 
-    // Generate the seat grid
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            let left = col * boxSize;
-            let top = row * boxSize;
-            $seatGrid.append(
-                `<div class="box" 
-                      data-id="${row}-${col}" 
-                      data-row="${row}" 
-                      data-col="${col}" 
-                      data-seat-num="" 
-                      style="
-                      left: ${left}px; 
-                      top: ${top}px;
-                      width: ${boxSize - 3}px;
-                      height: ${boxSize -2}px;
-                      ">
-                </div>`
-            );
-        }
-    }
 
     $('.box').on("click", function () {
-        if( $('#enable_clear').hasClass('enable_clear_selected')){
-            if ($('#enable_clear').hasClass('enable_clear_selected')) {
-                $(this).toggleClass('selected');
-                $(this).removeClass('save');
-                $(this).css('background', '');
-                $(this).text('');
-            }
-        }else{
-            if( $(this).hasClass('save') && $('#set_seat_number').hasClass('setSeatNumberSelected') ) {
-                let seatNum = $('#seat_number').val();
-                $(this).text(seatNum);
-                $(this).attr('data-seat-num', seatNum);
-            }
+        if( $(this).hasClass('save') && $('#set_seat_number').hasClass('setSeatNumberSelected') ) {
+            let seatNum = $('#seat_number').val();
+            $(this).text(seatNum);
+            $(this).attr('data-seat-num', seatNum);
         }
-
     });
 
     // Function to initialize draggable if box has 'selected' class
@@ -87,8 +55,8 @@ $(document).ready(function () {
     }
 
     $(".box").on("click", function () {
-       /* $(".box").removeClass("selected"); // Remove 'selected' from other boxes
-        $(this).addClass("selected"); // Add 'selected' to clicked box*/
+        /* $(".box").removeClass("selected"); // Remove 'selected' from other boxes
+         $(this).addClass("selected"); // Add 'selected' to clicked box*/
         // Re-initialize draggable functionality
         $(".box").draggable("destroy"); // Destroy existing draggable
         enableDraggableIfSelected();    // Re-enable draggable with condition
@@ -125,6 +93,9 @@ $(document).ready(function () {
 
     $(document).on('click', '#enable_drag_drop', function () {
         $(this).toggleClass('enable_drag_drop');
+        /*if( $(this).hasClass('enable_drag_drop')){
+            enableDraggableIfSelected();
+        }*/
     });
     $(document).on('click', '.box', function() {
         if ($('#make_circle').hasClass('circleSelected')) {
@@ -138,13 +109,8 @@ $(document).ready(function () {
     });
 
     // Save plan functionality
-    $('#save-plan').on('click', function () {
-        const planName = $('#plan-name').val();
-        if (!planName) {
-            alert('Please enter a plan name!');
-            return;
-        }
-
+    $('#update-plan').on('click', function () {
+        const plan_id = $('#plan_id').val();
         var selectedSeats = [];
         $('.box.save').each(function () {
             if ( $(this).css('background-color') !== 'rgb(255, 255, 255)') { // Not default white
@@ -172,11 +138,11 @@ $(document).ready(function () {
         console.log( selectedSeats );
 
         $.ajax({
-            url: 'save_plan.php',
+            url: 'save_edited_plan.php',
             type: 'POST',
-            data: { planName, selectedSeats },
+            data: { plan_id, selectedSeats },
             success: function (response) {
-                alert('Plan saved successfully!');
+                alert(' Edited Plan saved successfully!');
                 loadPlans(); // Reload saved plans
                 selectedSeats = [];
             },
@@ -229,29 +195,27 @@ $(document).ready(function () {
                 height: height,
             });
 
-            if( !$('#enable_clear').hasClass('enable_clear_selected')) {
-                $('.box').each(function () {
-                    const $box = $(this);
-                    const boxOffset = $box.offset();
-                    const boxPosition = {
-                        left: boxOffset.left,
-                        top: boxOffset.top,
-                        right: boxOffset.left + $box.outerWidth(),
-                        bottom: boxOffset.top + $box.outerHeight(),
-                    };
+            $('.box').each(function () {
+                const $box = $(this);
+                const boxOffset = $box.offset();
+                const boxPosition = {
+                    left: boxOffset.left,
+                    top: boxOffset.top,
+                    right: boxOffset.left + $box.outerWidth(),
+                    bottom: boxOffset.top + $box.outerHeight(),
+                };
 
-                    if (
-                        boxPosition.left < left + width &&
-                        boxPosition.right > left &&
-                        boxPosition.top < top + height &&
-                        boxPosition.bottom > top
-                    ) {
-                        $box.addClass('hovered');
-                    } else {
-                        $box.removeClass('hovered');
-                    }
-                });
-            }
+                if (
+                    boxPosition.left < left + width &&
+                    boxPosition.right > left &&
+                    boxPosition.top < top + height &&
+                    boxPosition.bottom > top
+                ) {
+                    $box.addClass('hovered');
+                } else {
+                    $box.removeClass('hovered');
+                }
+            });
         }
     });
 
@@ -331,5 +295,46 @@ $(document).ready(function () {
 
     // Initialize
     loadPlans();
+
+
+    function edit_plan( plan_id ){
+        console.log( plan_id );
+
+        const $seatGrid = $('#edit-seat-grid');
+        const rows = 15, cols = 21, boxSize = 35;
+
+
+        // Generate the seat grid
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                var background_color = '';
+                var selectedClass = '';
+                let left = col * boxSize;
+                let top = row * boxSize;
+                if( left == 385 && top === 140){
+                    background_color = '#246d6d';
+                    selectedClass = 'selected save';
+                }
+                $seatGrid.append(
+                    `<div class="box ${selectedClass}" 
+                      data-id="${row}-${col}" 
+                      data-row="${row}" 
+                      data-col="${col}" 
+                      data-seat-num="" 
+                      style="
+                      left: ${left}px; 
+                      top: ${top}px;
+                      width: ${boxSize - 3}px;
+                      height: ${boxSize -2}px;
+                      background-color: ${background_color};
+                      ">
+                </div>`
+                );
+            }
+        }
+    }
+
+    let plan_id = $('#plan_id').val();
+    // edit_plan( plan_id );
 
 });

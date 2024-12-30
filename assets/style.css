@@ -51,6 +51,9 @@ body {
 .enable_resize_selected{
     background-color: #cf933d;
 }
+.enable_clear_selected{
+    background-color: #cf933d;
+}
 .triangle {
     width: 0;
     height: 0;
@@ -92,4 +95,35 @@ body {
 }
 .set_price{
     width: 50px;
+}
+#color{
+    padding: 1px 1px;
+    inline-size: 25px;
+    block-size: 27px;
+}
+
+.editSeatPlan{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+#edit-seat-grid{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+.edit_plan_title{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+.edit_toolbar{
+    margin-bottom: 20px;
+    display: flex;
+    width: 100%;
+    float: left;
+    gap: 5px;
 }
