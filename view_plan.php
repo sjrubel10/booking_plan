@@ -56,16 +56,24 @@ foreach ($seats as $item) {
         cursor: pointer;
     }
     .boxChild{
-        border-radius: 3px;
+        /*border-radius: 3px;*/
         margin: 3px 3px 3px 3px;
         font-size: 12px;
+        /*border: 1px solid #000;*/
+        border-top-right-radius: 30px;
+        border-top-left-radius: 30px;
     }
     .box_selected{
         background-color: #333333;
     }
+    .seat_number{
+        position: absolute;
+        top: 10px;
+        left: 8px;
+    }
 </style>
 <h1><?php echo $plan_details['plan_name']?></h1>
-<div class="edit_plan" id="<?php echo $plan_details['plan_id']?>"><a href="editplan.php?plan_id=<?php echo $plan_details['plan_id']?>">Edit</a></div>
+<div class="edit_plan" id="<?php echo $plan_details['plan_id']?>"><a href="edit_plan_new.php?plan_id=<?php echo $plan_details['plan_id']?>">Edit</a></div>
 <div id="seat-grid">
     <div class="boxHolder">
     <?php
@@ -94,11 +102,11 @@ foreach ($seats as $item) {
                 <div class="boxChild"
                      style="
                              background-color: <?= htmlspecialchars($seat['color']) ?>;
-                             width: <?php echo $child_width?>px;
-                             height: <?php echo $child_height?>px;
+                             width: <?php echo $child_width - 4?>px;
+                             height: <?php echo $child_height - 3?>px;
                              ">
 
-               <?php echo isset( $seat['seat_number'] ) ? $seat['seat_number'] : ''?> </div>
+                    <span class="seat_number"><?php echo isset( $seat['seat_number'] ) ? $seat['seat_number'] : ''?></span> </div>
             </div>
 <!--        --><?php //} ?>
     <?php $start++;

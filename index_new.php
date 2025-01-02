@@ -27,6 +27,7 @@
         <button class="set_seat_number" id="set_seat_number">Set Seat Number</button>
         <input type="text" id="seat_number_prefix" placeholder="Prefix Like A ">
         <input type="number" id="seat_number_count" placeholder="1" value="0">
+        <button class="set_seat_number" id="place_seat_number">Place Seat Number</button>
 
     </div>
 
@@ -48,13 +49,23 @@
     $childHeight = $box_size + 5;
     $gap = 5;
 
+   /* $seats = [];
+    for ($row = 0; $row < $rows; $row++) {
+        for ($col = 0; $col < $columns; $col++) {
+            $seats[] = ['row' => $row, 'col' => $col];
+        }
+    }*/
+
+    /*echo "<pre>";
+    var_dump($seats);*/
+
     echo '<div class="parentDiv" id="parentDiv" style="position: relative; width: ' . ($columns * ($childWidth + $gap) - $gap) . 'px; height: ' . ($rows * ($childHeight + $gap) - $gap) . 'px;">';
     for ($i = 0; $i < $rows; $i++) {
         for ($j = 0; $j < $columns; $j++) {
             $top = $j * ($childWidth + $gap) + 10;
             $left = $i * ($childHeight + $gap) + 10;
             $id = $i * $columns + $j;
-            echo '<div class="childDiv" data-id="' . $id . '" data-price="0" style="position: absolute; width: ' . $childWidth . 'px; height: ' . $childHeight . 'px; left: ' . $top . 'px; top: ' . $left . 'px;">' . $id . '</div>';
+            echo '<div class="childDiv"  data-row="'.$i.'" data-col="'.$j.'" data-id="' . $i . '-'. $j. ' " data-price="0" style="position: absolute; width: ' . $childWidth . 'px; height: ' . $childHeight . 'px; left: ' . $top . 'px; top: ' . $left . 'px;">' . $id . '</div>';
         }
     }
     echo '</div>';

@@ -18,47 +18,22 @@ $(document).ready(function () {
         $(this).toggleClass('enable_set_seat_number');
     });
 
-
-    $(document).on('click', '#place_seat_number', function () {
-        // $(this).toggleClass('enable_set_seat_number');
-        // alert('Ok');
-        console.log( selectedSeatsDivs );
-        let start = 0;
-        let seat_prefix = $("#seat_number_prefix").val();
-        let count = parseInt($("#seat_number_count").val(), 10);
-        selectedSeatsDivs.forEach(div => {
-            if( div.hasClass('selected')){
-                if( seat_prefix !== '' ){
-                    var seat_number = seat_prefix+'-'+count;
-                }else{
-                    seat_number = count;
-                }
-                $(div).text( seat_number );
-                $(div).attr('data-seat-num', seat_number);
-                count++;
-            }
-
-        });
-        selectedSeatsDivs = [];
-    });
-
     $(document).on('click', '#enable_drag_drop', function () {
         $(this).toggleClass('enable_drag_drop');
         if( !$(this).hasClass( 'enable_drag_drop' )){
             $(".childDiv").removeClass("ui-draggable ui-draggable-handle");
+            // selectedDivs = [];
         }
         //ui-draggable ui-draggable-handle
     });
 
     let selectedDivs = [];
-    let selectedSeatsDivs = [];
 
     $(document).on('click', '#clearAll', function () {
-            $('.childDiv').removeClass('save');
-            $('.childDiv').removeClass('selected');
-            $('.childDiv').css('background', '');
-            selectedDivs = [];
-            selectedSeatsDivs = [];
+        $('.childDiv').removeClass('save');
+        $('.childDiv').removeClass('selected');
+        $('.childDiv').css('background', '');
+        selectedDivs = [];
     });
     // Handle selection
     $(".childDiv").on("click", function (e) {
@@ -91,7 +66,6 @@ $(document).ready(function () {
         if ($this.hasClass("selected")) {
 
             selectedDivs.push($this);
-            selectedSeatsDivs.push($this);
             if( $('#enable_resize').hasClass('enable_resize_selected')) {
                 if (!$this.data("ui-resizable")) {
                     $this.resizable({
@@ -165,15 +139,15 @@ $(document).ready(function () {
 
         });
         selectedDivs = [];
-        // savePositions();
     });
 
     $('#savePlan').on('click', function () {
-        const planName = $('#plan-name').val();
+        const plan_id = $('#plan_id').val();
+        /*const planName = $('#plan-name').val();
         if (!planName) {
             alert('Please enter a plan name!');
             return;
-        }
+        }*/
         var selectedSeats = [];
         $('.childDiv.save').each(function () {
             if ( $(this).css('background-color') !== 'rgb(255, 255, 255)') { // Not default white
@@ -198,14 +172,14 @@ $(document).ready(function () {
             return;
         }
         // selectedSeats.sort((a, b) => a.col - b.col);
-        console.log( selectedSeats );
+        // console.log( selectedSeats );
 
         $.ajax({
-            url: 'save_plan.php',
+            url: 'save_edited_plan.php',
             type: 'POST',
-            data: { planName, selectedSeats },
+            data: { plan_id, selectedSeats },
             success: function (response) {
-                alert('Plan saved successfully!');
+                alert(' Edited Plan saved successfully!');
                 loadPlans(); // Reload saved plans
                 selectedSeats = [];
             },
@@ -249,7 +223,7 @@ $(document).ready(function () {
             }
         });
     }
-    loadPlans();
+    // loadPlans();
 
     let isMultiSelecting = false;
     let startPoint = { x: 0, y: 0 };
@@ -292,27 +266,27 @@ $(document).ready(function () {
                 height: height,
             });
 
-                $('.childDiv').each(function () {
-                    const $box = $(this);
-                    const boxOffset = $box.offset();
-                    const boxPosition = {
-                        left: boxOffset.left,
-                        top: boxOffset.top,
-                        right: boxOffset.left + $box.outerWidth(),
-                        bottom: boxOffset.top + $box.outerHeight(),
-                    };
+            $('.childDiv').each(function () {
+                const $box = $(this);
+                const boxOffset = $box.offset();
+                const boxPosition = {
+                    left: boxOffset.left,
+                    top: boxOffset.top,
+                    right: boxOffset.left + $box.outerWidth(),
+                    bottom: boxOffset.top + $box.outerHeight(),
+                };
 
-                    if (
-                        boxPosition.left < left + width &&
-                        boxPosition.right > left &&
-                        boxPosition.top < top + height &&
-                        boxPosition.bottom > top
-                    ) {
-                        $box.addClass('hovered');
-                    } else {
-                        $box.removeClass('hovered');
-                    }
-                });
+                if (
+                    boxPosition.left < left + width &&
+                    boxPosition.right > left &&
+                    boxPosition.top < top + height &&
+                    boxPosition.bottom > top
+                ) {
+                    $box.addClass('hovered');
+                } else {
+                    $box.removeClass('hovered');
+                }
+            });
         }
     });
     // let count = 0;
@@ -339,7 +313,6 @@ $(document).ready(function () {
 
                 // console.log( seat_prefix );
                 selectedDivs.push($(this));
-                selectedSeatsDivs.push($(this));
                 $(this).toggleClass('selected').removeClass('hovered');
             });
 
